@@ -12,7 +12,6 @@ import org.bukkit.plugin.Plugin
 
 class Shortcut(plugin: Plugin) : CommandExecutor, TabExecutor {
     private val yml = Yml(plugin)
-    private val shortcutsFile = yml.acquisitionYml("", "shortcuts")
     // 処理マップ
     private val processingMap = mapOf<String, (args: Array<out String>, sender: CommandSender) -> Any>(
         "make" to { args: Array<out String>, sender: CommandSender ->
@@ -43,7 +42,8 @@ class Shortcut(plugin: Plugin) : CommandExecutor, TabExecutor {
         } else { true }
     }
     private fun acquisitionShortCutKeys(): MutableList<String> {
-        return yml.acquisitionShortcutName(shortcutsFile)
+        val shortcutsFile = yml.acquisitionYml("", "shortcuts")
+        return shortcutsFile.getKeys(false).toMutableList()
     }
     private fun isContainsShortcut(shortcutName: String): Boolean {
         return acquisitionShortCutKeys().contains(shortcutName)
@@ -52,6 +52,7 @@ class Shortcut(plugin: Plugin) : CommandExecutor, TabExecutor {
         if (!isOP(sender)) {
             return
         }
+        val shortcutsFile = yml.acquisitionYml("", "shortcuts")
         val shortcutName = args[1]
         if (isContainsShortcut(shortcutName)) {
             sender.sendMessage("${ChatColor.RED}同じ名前のショートカットを作成することはできません")
@@ -62,6 +63,7 @@ class Shortcut(plugin: Plugin) : CommandExecutor, TabExecutor {
     }
     private fun deleteShortcut(sender: CommandSender, args: Array<out String>) {
         val shortcutName = args[1]
+        val shortcutsFile = yml.acquisitionYml("", "shortcuts")
         if (!isOP(sender)) {
             return
         }
@@ -77,6 +79,7 @@ class Shortcut(plugin: Plugin) : CommandExecutor, TabExecutor {
         if (!isOP(sender)) {
             return
         }
+        val shortcutsFile = yml.acquisitionYml("", "shortcuts")
         val shortcutName = args[1]
         if (!isContainsShortcut(shortcutName)) {
             sender.sendMessage("${ChatColor.RED}ショートカットが見つかりませんでした")
@@ -93,6 +96,7 @@ class Shortcut(plugin: Plugin) : CommandExecutor, TabExecutor {
     }
     private fun removeCommand(sender: CommandSender, args: Array<out String>) {
         if (args.size <= 2) { return }
+        val shortcutsFile = yml.acquisitionYml("", "shortcuts")
         if (!isOP(sender)) {
             return
         }
@@ -112,6 +116,7 @@ class Shortcut(plugin: Plugin) : CommandExecutor, TabExecutor {
     }
     private fun runCommand(sender: CommandSender, args: Array<out String>) {
         val shortcutName = args[1]
+        val shortcutsFile = yml.acquisitionYml("", "shortcuts")
         val commands = shortcutsFile.getList("$shortcutName.commands")
         if (commands == null) {
             sender.sendMessage("${ChatColor.RED}ショートカットが見つかりませんでした")
@@ -144,6 +149,7 @@ class Shortcut(plugin: Plugin) : CommandExecutor, TabExecutor {
     private fun displayCommand(args: Array<out String>): MutableList<String>? {
         val subCommand = args[0]
         val shortcutName = args[1]
+        val shortcutsFile = yml.acquisitionYml("", "shortcuts")
         return when (subCommand) {
             "add" -> mutableListOf("[コマンド]")
             "remove" -> {
@@ -163,6 +169,7 @@ class Shortcut(plugin: Plugin) : CommandExecutor, TabExecutor {
     }
     private fun saveFile(sender: CommandSender, file: YamlConfiguration, successMessages: String) {
         try {
+            val shortcutsFile = yml.acquisitionYml("", "shortcuts")
             yml.superscription("", "shortcuts", shortcutsFile)
             sender.sendMessage("${ChatColor.YELLOW}$successMessages")
         } catch (e: Exception) {
