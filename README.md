@@ -1,13 +1,4 @@
-# KotlinSpigotPluginTemplate (クローン元)
-https://github.com/sya-ri/KotlinSpigotPluginTemplate
-
-# SpigotPluginTemplate
-
-## 使い方
-
-- `Use this template` を押して、GitHub 上にプロジェクトを作成する。
-- 作成したプロジェクトをクローンする。
--  Gradle の `setup` タスクを実行して、初期化する。
+# shortcutCommands
 
 ## plugin.yml
 
