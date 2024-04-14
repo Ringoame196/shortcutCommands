@@ -170,7 +170,7 @@ class Shortcut(plugin: Plugin) : CommandExecutor, TabExecutor {
     private fun saveFile(sender: CommandSender, file: YamlConfiguration, successMessages: String) {
         try {
             val shortcutsFile = yml.acquisitionYml("", "shortcuts")
-            yml.superscription("", "shortcuts", shortcutsFile)
+            yml.superscription("", "shortcuts", file)
             sender.sendMessage("${ChatColor.YELLOW}$successMessages")
         } catch (e: Exception) {
             sender.sendMessage("${ChatColor.RED}エラーが起きました(詳細はコンソール)")
